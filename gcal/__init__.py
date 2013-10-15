@@ -82,11 +82,3 @@ class GCal(object):
             if e["summary"] == event["summary"] and e_start == start and e_end == end:
                 return True
         return False
-
-
-if __name__ == "__main__":
-    g = GCal(client_id='800395315239-r1mcb8eebtjnkkf03udpdrnff6fgt5sn.apps.googleusercontent.com',
-             client_secret='b2aRVDOypDeSWTG0UExrWwSb',
-             scope='https://www.googleapis.com/auth/calendar',
-             user_agent='Sub Fetcher/0.01')
-    g.exists({"summary":"TCC LH-026", "start":{"dateTime":pytz.timezone("US/Eastern").localize(datetime.datetime(2013, 10, 17, 16, 0, 0))}, "end":{"dateTime":pytz.timezone("US/Eastern").localize(datetime.datetime(2013, 10, 17, 20, 0, 0))}}, calendars=[{"id":"jknc6c60le98j6vl10kbhfo1p8@group.calendar.google.com"}])
