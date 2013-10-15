@@ -32,10 +32,6 @@ class GCal(object):
                 continue
         return event
     def get_events(self, timeMin, timeMax):
-#        cached_events = self.event_cache.get((day.year, day.month, day.day), None)
-#        if cached_events:
-#            return cached_events
-#        else:
         ret = []
         for c in self.calendars["items"]:
             events = self.service.events().list(
@@ -43,14 +39,11 @@ class GCal(object):
                 singleEvents=True, 
                 maxResults=1000, 
                 orderBy='startTime',
-                #timeMin=day.strftime('%Y-%m-%dT00:00:00-05:00'), 
                 timeMin=timeMin.isoformat(), 
-                #timeMax=(day+datetime.timedelta(days=1)).strftime('%Y-%m-%dT00:00:00-05:00'),
                 timeMax=timeMax.isoformat(),
                 ).execute()
             ret.extend(filter(lambda event: not event.get("allDay", False), map(self.__parse_dates, events["items"])))
  
-            #self.event_cache[(day.year, day.month, day.day)] = ret
         return ret
     def busy(self, start, stop, calendars=None):
         if not calendars:
@@ -65,9 +58,7 @@ class GCal(object):
         return any(map(lambda x: len(x["busy"]) > 0, fb["calendars"].itervalues()))
 
     def exists(self, event, calendars=None):
-#        start = dateutil.parser.parse(event["start"].get("date", False) or event["start"].get("dateTime"))
         start = event["start"].get("date", False) or event["start"].get("dateTime")
-#        end = dateutil.parser.parse(event["end"].get("date", False) or event["end"].get("dateTime"))
         end = event["end"].get("date", False) or event["end"].get("dateTime")
         events = self.get_events(start, end)
         for e in events:
@@ -78,7 +69,13 @@ class GCal(object):
             if isinstance(e_end, str):
                 e_end = dateutil.parser.parse(e_end)
 
-            print e["summary"], "==", event["summary"]
+#            print e["summary"], "==", event["summary"]
+#            print e_start, "==", start
+#            print e_end, "==", end
+#            print "-"*40    
             if e["summary"] == event["summary"] and e_start == start and e_end == end:
                 return True
         return False
+    def add_event(self, calendarId, name, start, end, location=""):
+        return self.service.events().insert(calendarId=calendarId, start={"dateTime":start}, end={"dateTime":end}, location=location, summary=name).execute()
+    
