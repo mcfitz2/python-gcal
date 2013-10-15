@@ -77,5 +77,5 @@ class GCal(object):
                 return True
         return False
     def add_event(self, calendarId, name, start, end, location=""):
-        return self.service.events().insert(calendarId=calendarId, start={"dateTime":start}, end={"dateTime":end}, location=location, summary=name).execute()
+        return self.service.events().insert(calendarId=calendarId, body={"start":{"dateTime":start.isoformat()}, "end":{"dateTime":end.isoformat()}, "location":location, "summary":name}).execute()
     
