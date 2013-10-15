@@ -25,7 +25,7 @@ class GCal(object):
         for key in ["start", "end"]:
             if event[key].get("date", False):
                 event["allDay"] = True
-                event[key]["date"] = dateutil.parser.parse(event[key]["date"]).astimezone(pytz.UTC)
+                event[key]["date"] = dateutil.parser.parse(event[key]["date"])
                 continue
             elif event[key].get("dateTime", False):
                 event[key]["dateTime"] = dateutil.parser.parse(event[key]["dateTime"]).astimezone(pytz.UTC)
