@@ -17,7 +17,7 @@ setup(
     license = "BSD",
     keywords = "",
 #    url = "http://packages.python.org/an_example_pypi_project",
-    packages=['PIE'],
+    packages=['gcal'],
 #    long_description=read('README'),
 #    classifiers=[
 #        "Development Status :: 3 - Alpha",
