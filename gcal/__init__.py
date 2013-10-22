@@ -2,13 +2,15 @@ import gflags
 import httplib2
 from apiclient.discovery import build
 from oauth2client.file import Storage
-from oauth2client.client import OAuth2WebServerFlow, AccessTokenCredentials
+from oauth2client.client import OAuth2WebServerFlow, AccessTokenCredentials, OAuth2Credentials
 from oauth2client.tools import run
 import dateutil.parser
 import pytz
 import datetime
 import time
 import logging
+import json
+import os
 logger = logging.getLogger('')
 logger.setLevel(logging.ERROR)
 class GCal(object):
@@ -17,7 +19,18 @@ class GCal(object):
         FLOW = OAuth2WebServerFlow(client_id,client_secret,scope,user_agent)
         FLAGS.auth_local_webserver = False
         storage = Storage('credentials.dat')
-        credentials = storage.get()
+        credentials = None
+        try:
+            credentials = OAuth2Credentials(os.environ["access_token"], 
+                                            os.environ["client_id"],
+                                            os.environ["client_secret"],
+                                            os.environ["refresh_token"],
+                                            os.environ["token_expiry"],
+                                            os.environ["token_uri"],
+                                            os.environ["user_agent"])
+        except KeyError as e:
+            print e
+            credentials = storage.get()
         if credentials is None or credentials.invalid == True:
             credentials = run(FLOW, storage)
         http = httplib2.Http()
