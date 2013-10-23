@@ -14,11 +14,11 @@ import os
 logger = logging.getLogger('')
 logger.setLevel(logging.ERROR)
 class GCal(object):
-    def __init__(self, client_id=None, client_secret=None, scope=None, user_agent=None):
+    def __init__(self, client_id=None, client_secret=None, scope=None, user_agent=None, credentials_file=None):
         FLAGS = gflags.FLAGS
         FLOW = OAuth2WebServerFlow(client_id,client_secret,scope,user_agent)
         FLAGS.auth_local_webserver = False
-        storage = Storage('credentials.dat')
+        storage = Storage(credentials_file or 'credentials.dat')
         credentials = None
         try:
             credentials = OAuth2Credentials(os.environ["access_token"], 
